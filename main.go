@@ -49,6 +49,8 @@ func main() {
 		err := stream.Read()
 		if err != nil {
 			log.Fatal(err)
+		} else {
+			fmt.Println("You can clap!")
 		}
 
 		maxVol := 0.0
