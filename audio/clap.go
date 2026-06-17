@@ -2,13 +2,17 @@ package audio
 
 import (
 	"assistent/config"
+	"assistent/speech"
 	"time"
+
+	vosk "github.com/alphacep/vosk-api/go"
 )
 
 func DetectDoubleClap(
 	buffer []int16,
 	clapCount int,
 	lastClap time.Time,
+	recognizer *vosk.VoskRecognizer,
 ) (int, time.Time, bool) {
 
 	var maxVol int16
@@ -23,6 +27,14 @@ func DetectDoubleClap(
 		if sample > maxVol {
 			maxVol = sample
 		}
+	}
+
+	text, _ := speech.Recognize(
+		recognizer,
+		buffer,
+	)
+	if text == config.AssistantName || text == "подонок" {
+		return 0, lastClap, true
 	}
 
 	if maxVol > config.ClapThreshold &&
